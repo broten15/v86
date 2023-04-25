@@ -889,6 +889,11 @@ CPU.prototype.init = function(settings, device_bus)
             this.devices.virtio_9p = new Virtio9p(settings.fs9p, this, device_bus);
         }
 
+        // TODO: take out hardcode
+        console.log("√ before virtio_net creation");
+        this.devices.virtio_net = new VirtioNet(this, device_bus);
+        console.log("√", this.devices.virtio_net);
+
         if(true)
         {
             this.devices.sb16 = new SB16(this, device_bus);
