@@ -361,7 +361,8 @@ CPU.prototype.get_state = function()
     this.store_current_tsc();
     state[43] = this.current_tsc;
 
-    state[45] = this.devices.virtio_9p;
+    // state[45] = this.devices.virtio_9p;
+    state[45] = this.devices.virtio_net; // TODO: replace 9p with net for now
     state[46] = this.devices.apic;
     state[47] = this.devices.rtc;
     state[48] = this.devices.pci;
@@ -457,7 +458,9 @@ CPU.prototype.set_state = function(state)
 
     this.set_tsc(state[43][0], state[43][1]);
 
-    this.devices.virtio_9p && this.devices.virtio_9p.set_state(state[45]);
+    // this.devices.virtio_9p && this.devices.virtio_9p.set_state(state[45]);
+    console.log("√", "Before setting devices state");
+    this.devices.virtio_net.set_state(state[45]); // TODO: replace 9p with net for now
     this.devices.apic && this.devices.apic.set_state(state[46]);
     this.devices.rtc && this.devices.rtc.set_state(state[47]);
     this.devices.pci && this.devices.pci.set_state(state[48]);
@@ -884,6 +887,7 @@ CPU.prototype.init = function(settings, device_bus)
             this.devices.net = new Ne2k(this, device_bus, settings.preserve_mac_from_state_image, settings.mac_address_translation);
         }
 
+        // TODO: temporarily commented for virtio_net
         // if(settings.fs9p)
         // {
         //     this.devices.virtio_9p = new Virtio9p(settings.fs9p, this, device_bus);
