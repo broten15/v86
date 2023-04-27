@@ -289,6 +289,7 @@ function dump_packet(packet, prefix)
  */
 function Ne2k(cpu, bus, preserve_mac_from_state_image, mac_address_translation)
 {
+    console.log("√", "Ne2k constructor");
     /** @const @type {CPU} */
     this.cpu = cpu;
 
@@ -387,6 +388,7 @@ function Ne2k(cpu, bus, preserve_mac_from_state_image, mac_address_translation)
 
     io.register_write(this.port | E8390_CMD, this, function(data_byte)
     {
+        console.log("√", "THE PORT" ,this.port);
         this.cr = data_byte;
         dbg_log("Write command: " + h(data_byte, 2) + " newpg=" + (this.cr >> 6) + " txcr=" + h(this.txcr, 2), LOG_NET);
 
@@ -397,6 +399,7 @@ function Ne2k(cpu, bus, preserve_mac_from_state_image, mac_address_translation)
 
         if((data_byte & 0x18) && this.rcnt === 0)
         {
+            console.log("√", "bouta do interrupt");
             this.do_interrupt(ENISR_RDC);
         }
 
@@ -404,7 +407,9 @@ function Ne2k(cpu, bus, preserve_mac_from_state_image, mac_address_translation)
         {
             var start = this.tpsr << 8;
             var data = this.memory.subarray(start, start + this.tcnt);
-
+            console.log("√", "start", start);
+            console.log("√", "this.tcnt", this.tcnt);
+            console.log("√", "this.memory", this.memory);
             if(NE2K_LOG_PACKETS)
             {
                 dump_packet(data, "send");
@@ -412,10 +417,11 @@ function Ne2k(cpu, bus, preserve_mac_from_state_image, mac_address_translation)
 
             if(this.mac_address_in_state)
             {
+                console.log("√", "Mac address is in state");
                 data = new Uint8Array(data); // make a copy
                 translate_mac_address(data, this.mac_address_in_state, this.mac);
             }
-
+            console.log("√", "Bouta send");
             this.bus.send("net0-send", data);
             this.bus.send("eth-transmit-end", [data.length]);
             this.cr &= ~4;

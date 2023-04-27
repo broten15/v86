@@ -59,6 +59,9 @@ BusConnector.prototype.unregister = function(name, fn)
  */
 BusConnector.prototype.send = function(name, value, unused_transfer)
 {
+    if (name === "net0-send") {
+        console.log("√", "net0-send", value);
+    }
     if(!this.pair)
     {
         return;
