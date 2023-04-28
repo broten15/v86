@@ -883,7 +883,7 @@ CPU.prototype.init = function(settings, device_bus)
         this.devices.pit = new PIT(this, device_bus);
 
         if(settings.enable_ne2k)
-        {
+        {   
             this.devices.net = new Ne2k(this, device_bus, settings.preserve_mac_from_state_image, settings.mac_address_translation);
         }
 
@@ -896,7 +896,6 @@ CPU.prototype.init = function(settings, device_bus)
         // TODO: take out hardcode
         console.log("√ before virtio_net creation");
         this.devices.virtio_net = new VirtioNet(this, device_bus);
-        console.log("√", this.devices.virtio_net);
 
         if(true)
         {
